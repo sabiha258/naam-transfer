@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fbfbf4;
+  --surface: #ffffff;
+  --surface-2: #f3f2e6;
+  --border: #e6e3d3;
+  --foreground: #14213d;
+  --foreground-dim: #4b5563;
+
+  --primary: #112b58;
+  --primary-2: #0b1d3d;
+  --accent: #ca510e;
+  --accent-soft: #f7ddc9;
+  --sage: #4f8a62;
+  --sage-soft: #dcece1;
+
+  /* Fixed brand colors — navy + activation orange, sourced from the logo */
+  --brand-primary: #112b58;
+  --brand-primary-2: #0b1d3d;
+  --brand-orange: #ca510e;
+  --brand-navy: #112b58;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-foreground-dim: var(--foreground-dim);
+  --color-primary: var(--primary);
+  --color-primary-2: var(--primary-2);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-sage: var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-2: var(--brand-primary-2);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-navy: var(--brand-navy);
+  --font-sans: var(--font-montserrat);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--foreground);
+}
+
+/* Smooth open/close for native <details> FAQ answers — no JS. */
+.faq-answer {
+  transition: opacity 0.25s ease, translate 0.25s ease;
+}
+@starting-style {
+  details[open] .faq-answer {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* View Transitions — page-level cross-fade + blog image shared-element morph. */
+:root {
+  --duration-exit: 150ms;
+  --duration-enter: 210ms;
+  --duration-move: 400ms;
+}
+
+@keyframes fade {
+  from { filter: blur(3px); opacity: 0; }
+  to { filter: blur(0); opacity: 1; }
+}
+
+::view-transition-old(.fade-out) {
+  animation: var(--duration-exit) ease-in fade reverse;
+}
+::view-transition-new(.fade-in) {
+  animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
+}
+
+::view-transition-group(.morph) {
+  animation-duration: var(--duration-move);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  30% { filter: blur(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
